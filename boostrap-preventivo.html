@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>preventivo</title>
+
+    <!-- Collegamento al file CSS -->
+    <link rel="stylesheet" href="boostrap-preventivo.css">
+
+</head>
+<body>
+    
+
+
+    <!-- Contenitore principale della pagina -->
+     <div class="page-wrapper">
+
+
+
+        <!-- Intestazione con titolo e menu di navigazione -->
+        <div class="header">
+            <strong>bool factory</strong>
+
+
+            <nav class="nav-links">
+                    <a href="#">Home</a>
+                    <a href="#">Servizi</a>
+                    <a href="#">Contatti</a>
+            </nav>    
+
+
+              <!-- Icona hamburger (solo mobile) -->
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+            </div>
+
+
+
+        <!-- Contenuto principale della pagina -->
+        <div class="content">
+            <h1>Richiesta preventivo</h1>
+
+            <b>Compila il form per richiedere un preventivo per i nostri servizi di sviluppo</b>
+        
+
+         <!-- Sezione principale con il form -->
+        <div class="main-section">
+            <form class="form">
+
+                <!-- Campo nome -->
+                <label>Nome</label>
+                <input type="text" id="nome">
+
+                <!-- Campo cognome -->
+                <label>Cognome</label>
+                <input type="text" id="cognome">
+
+                 <!-- Campo email -->
+                <label>Email</label>
+                <input type="email" id="email">
+
+                 <!-- Selezione tipo di lavoro -->
+                <label>Tipo di lavoro</label>
+                <select id="tipo-lavoro">
+                    <option value="">Seleziona il tipo di lavoro</option>
+                    <option value="backend">Backend</option>
+                    <option value="frontend">Frontend</option>
+                    <option value="analisi">Analisi progettuale</option>
+                </select>
+
+                <!-- Textarea (con possibile stile Bootstrap 5) -->
+                <label>Textarea con Boostrap 5</label>
+                <textarea rows="4"></textarea>
+
+                <!-- Codice promozionale -->
+                <label>Codice promozionale</label>
+                <input type="text" id="promo">
+
+            <br>
+
+
+
+            <!-- Checkbox per accettazione Privacy Policy -->
+            <div class="privacy-policy">
+                <input type="checkbox" id="privacy">
+                <label for="privacy">Accetto la Privacy Policy</label>
+            </div>
+            <br>
+
+
+
+                 <!-- Messaggio sul codice promozionale -->
+                <div class="calcolo-prezzo-container">
+                <button type="submit">Calcola preventivo</button>
+
+                <div class="price-display">
+                    Prezzo finale<br>
+                    <span id="prezzo-finale">€ 0</span>
+                </div>
+                </div>
+
+            <p id="messaggio-promo"></p>
+
+        </form>
+
+
+
+            <!--Card Contatti aziendali-->
+            <div class="card">
+                <img src="https://www.infoischia.com/wp-content/uploads/2017/09/castello-aragonese-ischia-300x200.jpg" alt="castello aragonese" >
+                
+                <h2>I nostri contatti:</h2>
+                
+                <div class="card-section">
+                <b>Se hai bisogno di aiuto puoi contattarci: </b>
+                </div>
+
+                <div class="card-section">
+                <b>help@boolfactory.test</b>
+                </div>
+
+                <div class="card-section">
+                <b>+1122334455</b>
+                </div>
+                <br>
+                
+                <div class="card-section">
+                <a href="#">help desk</a>
+                </div>
+            </div>
+        </div>      
+        </div>
+
+
+
+    <!-- Footer della pagina -->
+    <footer>
+        © 2024 - Tutti i diritti riservati
+    </footer>
+
+
+
+
+        <!--script per il calcolo del preventivo-->
+    <script>
+        
+            //seleziono il form
+            const form=document.querySelector(".form");
+
+
+            //intercetto il submit del form
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+
+            //raccolgo gli elementi del form
+            const privacy=document.getElementById("privacy");
+            const tipoLavoro=document.getElementById("tipo-lavoro").value;
+            const promo=document.getElementById("promo").value.trim().toUpperCase();
+            const messaggioPromo=document.getElementById("messaggio-promo");
+            const prezzoFinale=document.getElementById("prezzo-finale");
+
+            //verifico accettazione Privacy Policy
+            if(!privacy.checked){
+                messaggioPromo.style.color="red";
+                messaggioPromo.innerText="devi accettare la privacy policy per procedere";
+                prezzoFinale.innerText="--";
+                return;
+            }
+            
+            //imposto ore di lavoro e prezzo orario in base alla scelta
+            const oreLavoro=10;
+            let prezzoOrario= 0;
+
+            if (tipoLavoro === "backend") {
+                prezzoOrario = 20.5;
+            }else if(tipoLavoro === "frontend") {
+                prezzoOrario = 15.3;
+            }else if(tipoLavoro === "analisi") {
+                prezzoOrario = 33.6;
+            }else{
+                prezzoFinale.innerText="--";
+                messaggioPromo.style.color="red";
+                messaggioPromo.innerText="Seleziona un tipo di lavoro valido.";
+                return;
+            }
+
+            //calcolo prezzo totale base
+            let totale = prezzoOrario * oreLavoro;
+
+             //lista codici promozionali validi
+            const codiciValidi = ["YHDNU32", "JANJC63", "PWKCN25", "SJDPO96", "POCIE24"];
+
+            //verifico se il codice è valido
+            if(codiciValidi.includes(promo)){
+                totale=totale*0.75;
+                messaggioPromo.style.color="green";
+                messaggioPromo.innerText="Codice promozionale valido: sconto del 25% applicati";
+            }else if(promo === ""){
+                messaggioPromo.innerText="";
+            }else{
+                messaggioPromo.style.color="red";
+                messaggioPromo.innerText="codice promozionale non valido. Nessun sconto applicato";
+            }
+
+            //prezzo finale
+            prezzoFinale.innerText=totale.toFixed(2);
+        });
+
+            // Hamburger menu (mobile)
+            const hamburger = document.getElementById("hamburger");
+            const navLinks = document.querySelector(".nav-links");
+
+            hamburger.addEventListener("click", () => {
+                navLinks.classList.toggle("active");
+            });
+    </script>
+</body>
+</html>
